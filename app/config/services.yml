@@ -1,0 +1,91 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: false
+
+    # makes classes in src/AppBundle available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    AppBundle\:
+        resource: '../../src/AppBundle/*'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../src/AppBundle/{Entity,Repository}'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    AppBundle\Controller\:
+        resource: '../../src/AppBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    # add more services, or override services that need manual wiring
+    # AppBundle\Service\ExampleService:
+    #     arguments:
+    #         $someArgument: 'some_value'
+
+
+    admin.pages:
+        class: AppBundle\Admin\PageAdmin
+        arguments: [~, AppBundle\Entity\Page, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: Pages,icon: '<i class="fa fa-cogs" aria-hidden="true"></i>' }
+        public: true
+
+    admin.contact:
+        class: AppBundle\Admin\ContactAdmin
+        arguments: [~, AppBundle\Entity\Contact, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Contacts", label: Contacts,icon: '<i class="fa fa-address-book-o" aria-hidden="true"></i>' }
+        public: true
+
+    admin.contact-group:
+        class: AppBundle\Admin\ContactGroupAdmin
+        arguments: [~, AppBundle\Entity\ContactGroup, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Contacts", label: Contact Groups,icon: '<i class="fa fa-address-book-o" aria-hidden="true"></i>' }
+        public: true
+
+    admin.admin-pages-to-access:
+        class: AppBundle\Admin\AdminPagesToAccessAdmin
+        arguments: [~, AppBundle\Entity\AdminPagesToAccess, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Users", label: Admin Pages To Access,icon: '<i class="fa fa-users"></i>' }
+        public: true
+
+    admin.user-roles:
+        class: AppBundle\Admin\UserRolesAdmin
+        arguments: [~, AppBundle\Entity\UserRoles, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Users", label: User Roles,icon: '<i class="fa fa-users"></i>' }
+        public: true
+
+    admin.user:
+        class: AppBundle\Admin\UserAdmin
+        arguments: [~, AppBundle\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Users", label: User Permissions,icon: '<i class="fa fa-users"></i>' }
+        public: true
+
+    admin.icons:
+        class: AppBundle\Admin\IconAdmin
+        arguments: [~, AppBundle\Entity\Icon, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Icons",on_top: true, label: Icons ,icon: '<i class="fa fa-font-awesome" aria-hidden="true"></i>' }
+        public: true
+
+    app.service.get-toke-storage:
+        class: AppBundle\Services\GetTokenStorage
+        public: true
+        arguments: ['@security.token_storage']
+

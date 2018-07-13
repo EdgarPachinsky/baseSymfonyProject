@@ -1,0 +1,22 @@
+{% extends '../base.html.twig' %}
+
+{%
+set metaParams = {
+'title': page.pageTitle,
+'description': page.pageMetaDescription,
+'keywords': page.pageMetaKeywords,
+'ogImage': page.pageOgImage
+}
+%}
+
+{% block meta %}
+    {% include '../parts/meta.html.twig' with metaParams %}
+{% endblock %}
+{% block title %}{{ page.pageTitle }} - {{ parent() }}{% endblock %}
+
+{% set activeAbout = true %}
+
+{% block body %}
+
+
+{% endblock %}

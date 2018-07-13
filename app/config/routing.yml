@@ -1,0 +1,21 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+tool_box_file_browser:
+    resource: "@ToolBoxFileBrowserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+
+admin:
+    resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
+    prefix: /admin
+
+_sonata_admin:
+    resource: .
+    type: sonata_admin
+    prefix: /admin
