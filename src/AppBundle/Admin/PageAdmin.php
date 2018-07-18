@@ -68,11 +68,6 @@ class PageAdmin extends AbstractAdmin
         $formMapper
             ->add('pageTitle')
             ->add('pageText', CKEditorType::class)
-            ->add('advantageGroup', 'entity', array(
-                'class' => 'AppBundle\Entity\AdvantageGroup',
-                'choice_label' => 'advantage_group_title',
-                'required' => false,
-            ))
             ->add('pageMetaKeywords', 'text')
             ->add('pageMetaDescription', 'text')
             ->add('pageOgImage', FileBrowserType::class, array(

@@ -13,6 +13,10 @@ class AdminPagesToAccessAdmin extends AbstractAdmin
 {
 
 
+    protected function getRoutes_(){
+        return  $this->getRoutes();
+    }
+
 
     public function toString($object)
     {
@@ -38,7 +42,6 @@ class AdminPagesToAccessAdmin extends AbstractAdmin
 
     protected function configureListFields(ListMapper $listMapper)
     {
-
 
         $listMapper
             ->add('pageName')

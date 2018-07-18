@@ -2,20 +2,21 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\PropertyRoomType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use AppBundle\Entity\AdminPagesToAccess;
+use Symfony\Component\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends Controller
 {
+
+    private $router;
+    public function __construct(Router $router)
+    {
+        $this->router = $router;
+    }
+
 
     /**
      * @Route("/{_locale}", name="homepage",
@@ -29,6 +30,45 @@ class PageController extends Controller
      */
     public function indexAction(Request $request, $_locale = "en")
     {
+        $arrayOfRouts = $this->router->getRouteCollection()->getIterator()->getArrayCopy();
+        $adminRouteCategories = [];
+
+        $routeName = "";
+        $routePath = "";
+        foreach ($arrayOfRouts as $key => $val){
+            $explodedKey = explode('_',$key);
+
+            if($explodedKey[0] == 'admin' and $explodedKey[1] == 'app'){
+                $mainPath = $val->getPath();
+                $path = explode('/',$mainPath);
+
+                if($path[1] == 'admin' and $path[2] == 'app'){
+                    $routeName = $path[3]."_".$path[count($path)-1];
+                    $routePath = "^".$mainPath;
+
+                    if(array_key_exists(strtoupper($path[3]),$adminRouteCategories )){
+                        array_push( $adminRouteCategories[strtoupper($path[3])] ,[strtoupper($routeName),$routePath]);
+                    }else{
+                        $adminRouteCategories[strtoupper($path[3])] = [];
+                        array_push( $adminRouteCategories[strtoupper($path[3])] ,[strtoupper($routeName),$routePath]);
+                    }
+                }
+            }
+        }
+
+        dump($adminRouteCategories);
+        $em = $this->getDoctrine()->getManager();
+        foreach ($adminRouteCategories as $arc){
+            foreach ($arc as $a){
+                $adminPageToAccess = new AdminPagesToAccess();
+                $adminPageToAccess->setPageName($a[0]);
+                $adminPageToAccess->setPagePath($a[1]);
+                $em->persist($adminPageToAccess);
+                $em->flush();
+            }
+        }
+
+        die;
         return $this->render('pages/index.html.twig');
     }
 

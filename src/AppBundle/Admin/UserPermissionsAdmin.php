@@ -18,9 +18,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 
-class UserAdmin extends AbstractAdmin
+class UserPermissionsAdmin extends AbstractAdmin
 {
-
     protected function configureFormFields(FormMapper $formMapper)
     {
 
@@ -64,6 +63,8 @@ class UserAdmin extends AbstractAdmin
         foreach ($object->getAdminAccessRoles() as $role){
             array_push($rolesArray,$role->getRoleName());
         }
+
+        dump($object->getRoles());die;
         $object->setRoles($rolesArray);
         $object->setRoleChange(1);
     }

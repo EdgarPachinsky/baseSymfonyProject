@@ -70,12 +70,15 @@ services:
             - { name: sonata.admin, manager_type: orm, group: "Users", label: User Roles,icon: '<i class="fa fa-users"></i>' }
         public: true
 
-    admin.user:
-        class: AppBundle\Admin\UserAdmin
+    admin.user-permissions:
+        class: AppBundle\Admin\UserPermissionsAdmin
         arguments: [~, AppBundle\Entity\User, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Users", label: User Permissions,icon: '<i class="fa fa-users"></i>' }
         public: true
+
+
+
 
     admin.icons:
         class: AppBundle\Admin\IconAdmin
